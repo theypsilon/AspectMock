@@ -8,7 +8,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new demo\UserModel;
 
-        $actual = $sut instanceof demo\UserModel;
+        $actual = $sut instanceof 'demo\UserModel';
 
         verify($actual)->true();
     }
