@@ -28,7 +28,7 @@ use PHPUnit_Framework_Assert as a;
  * ``` php
  * <?php
  * $userModel = test::double('UserModel');
- * $userModel->className; // UserModel
+ * $userModel->getClassName(); // UserModel
  * ?>
  * ```
  *
@@ -42,21 +42,23 @@ use PHPUnit_Framework_Assert as a;
  * ?>
  * ```
  */
-class ClassProxy extends Verifier  {
+class ClassProxy implements Verifier  {
+
+    use VerifierTrait;
 
     protected $reflected;
     
 
     public function __construct($class_name)
     {
-        $this->className = $class_name;
+        $this->setClassName($class_name);
         $this->reflected = new \ReflectionClass($class_name);
 
     }
 
     public function getCallsForMethod($method)
     {
-        $calls = Registry::getClassCallsFor($this->className);
+        $calls = Registry::getClassCallsFor($this->getClassName());
         return isset($calls[$method])
             ? $calls[$method]
             : [];
@@ -169,7 +171,7 @@ class ClassProxy extends Verifier  {
 
     public function __call($method, $args)
     {
-        throw new \Exception("Called {$this->className}->$method, but this is a proxy for a class definition.\nProbably you was trying to access instance method.\nConstruct an instance from this class");
+        throw new \Exception("Called {$this->getClassName()}->$method, but this is a proxy for a class definition.\nProbably you was trying to access instance method.\nConstruct an instance from this class");
     }
 
 }

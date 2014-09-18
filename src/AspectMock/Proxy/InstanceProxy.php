@@ -55,14 +55,16 @@ use AspectMock\Test;
  *
  */
 
-class InstanceProxy extends Verifier {
+class InstanceProxy implements Verifier {
+
+    use VerifierTrait;
 
     protected $instance;
 
     public function __construct($object)
     {
         $this->instance = $object;
-        $this->className = get_class($object);
+        $this->setClassName(get_class($object));
     }
 
     protected function callSyntax($method)
@@ -103,7 +105,7 @@ class InstanceProxy extends Verifier {
     public function __get($property)
     {
         if ($property === 'class') {
-            return $this->class = new ClassProxy($this->className);
+            return $this->class = new ClassProxy($this->getClassName());
         }
         if (method_exists($this->instance, '__get')) {
             return call_user_func([$this->instance, '__get'], $property);

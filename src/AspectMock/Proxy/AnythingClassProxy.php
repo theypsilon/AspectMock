@@ -6,7 +6,7 @@ class AnythingClassProxy extends ClassProxy {
 
     public function __construct($class_name)
     {
-        $this->className = $class_name;
+        $this->setClassName($class_name);
         $this->reflected = new \ReflectionClass('AspectMock\Proxy\Anything');
     }
 
@@ -17,12 +17,12 @@ class AnythingClassProxy extends ClassProxy {
 
     public function construct()
     {
-        return new Anything($this->className);
+        return new Anything($this->getClassName());
     }
 
     public function make()
     {
-        return new Anything($this->className);
+        return new Anything($this->getClassName());
     }
 
     public function interfaces()

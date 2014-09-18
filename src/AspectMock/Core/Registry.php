@@ -96,7 +96,7 @@ class Registry {
 
     public static function getRealClassOrObject($classOrObject)
     {
-        if ($classOrObject instanceof ClassProxy) return $classOrObject->className;
+        if ($classOrObject instanceof ClassProxy) return $classOrObject->getClassName();
         if ($classOrObject instanceof InstanceProxy) return $classOrObject->getObject();
         return $classOrObject;
     }

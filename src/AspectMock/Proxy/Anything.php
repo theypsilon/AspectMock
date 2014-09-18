@@ -10,21 +10,21 @@ use AspectMock\Util\Undefined;
  */
 class Anything implements Undefined, \ArrayAccess, \Iterator
 {
-    private $className;
+    use ClassHandlerTrait;
 
     public function __construct($className = null)
     {
-        $this->className = $className;             
+        $this->setClassName($className);
     }
 
     function __toString()
     {
-        return "| Undefined | ".$this->className;
+        return "| Undefined | ".$this->getClassName();
     }
 
     function __get($key)
     {
-        return new Anything($this->className);
+        return new Anything($this->getClassName());
     }
 
     function __set($key, $val)
@@ -33,7 +33,7 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
 
     function __call($method, $args)
     {
-        return new Anything($this->className);
+        return new Anything($this->getClassName());
     }
 
     public function offsetExists($offset)
@@ -43,7 +43,7 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
 
     public function offsetGet($offset)
     {
-        return new Anything($this->className);
+        return new Anything($this->getClassName());
     }
 
 

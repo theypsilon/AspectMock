@@ -21,12 +21,12 @@ $userModel->verifyInvoked('save');
 ?>
 ```
 
-You can get a class name of a proxy via `className` property.
+You can get a class name of a proxy via `getClassName` method.
 
 ``` php
 <?php
 $userModel = test::double('UserModel');
-$userModel->className; // UserModel
+$userModel->getClassName(); // UserModel
 ?>
 ```
 

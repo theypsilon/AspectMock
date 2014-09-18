@@ -9,36 +9,7 @@ use AspectMock\Util\ArgumentsFormatter;
  *   
  */
 
-abstract class Verifier {
-
-    /**
-     * Name of a class.
-     *
-     * @var
-     */
-    public $className;
-
-    protected $invokedFail = "Expected %s to be invoked but it never occur.";
-    protected $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occur.";
-    protected $invokedMultipleTimesFail = "Expected %s to be invoked but called %s times but called %s.";
-
-    protected $neverInvoked = "Expected %s not to be invoked but it was.";
-
-    abstract public function getCallsForMethod($method);
-
-    protected function callSyntax($method)
-    {
-        return method_exists($this->className,$method)
-            ? '::'
-            : '->';
-    }
-
-    protected function onlyExpectedArguments($expectedParams, $passedArgs)
-    {
-        return empty($expectedParams) ?
-            $passedArgs :
-            array_slice($passedArgs, 0, count($expectedParams));
-    }
+interface Verifier {
 
     /**
      * Verifies a method was invoked at least once.
@@ -58,23 +29,7 @@ abstract class Verifier {
      * @param array $params
      * @throws fail
      */
-    public function verifyInvoked($name, $params = null)
-    {
-        $calls = $this->getCallsForMethod($name);
-        $separator = $this->callSyntax($name);
-
-        if (empty($calls)) throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name));
-
-        if (is_array($params)) {
-            foreach ($calls as $args) {
-                if ($this->onlyExpectedArguments($params, $args) === $params) return;
-            }
-            $params = ArgumentsFormatter::toString($params);
-            throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name."($params)"));
-        } else if(is_callable($params)) {
-            $params($calls);
-        }
-    }
+    public function verifyInvoked($name, $params = null);
 
     /**
      * Verifies that method was invoked only once.
@@ -82,10 +37,7 @@ abstract class Verifier {
      * @param $name
      * @param array $params
      */
-    public function verifyInvokedOnce($name, $params = null)
-    {
-        $this->verifyInvokedMultipleTimes($name, 1, $params);
-    }
+    public function verifyInvokedOnce($name, $params = null);
 
     /**
      * Verifies that method was called exactly $times times.
@@ -103,28 +55,7 @@ abstract class Verifier {
      * @param array $params
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
-    public function verifyInvokedMultipleTimes($name, $times, $params = null)
-    {
-        if ($times == 0) return $this->verifyNeverInvoked($name, $params);
-
-        $calls = $this->getCallsForMethod($name);
-        $separator = $this->callSyntax($name);
-
-        if (empty($calls)) throw new fail(sprintf($this->notInvokedMultipleTimesFail, $this->className.$separator.$name, $times));
-        if (is_array($params)) {
-            $equals = 0;
-            foreach ($calls as $args) {
-                if ($this->onlyExpectedArguments($params, $args) == $params) $equals++;
-            }
-            if ($equals == $times) return;
-            $params = ArgumentsFormatter::toString($params);
-            throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name."($params)", $times, $equals));
-        } else if(is_callable($params)) {
-            $params($calls);
-        }
-        $num_calls = count($calls);
-        if ($num_calls != $times) throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
-    }
+    public function verifyInvokedMultipleTimes($name, $times, $params = null);
 
     /**
      * Verifies that method was not called.
@@ -144,20 +75,6 @@ abstract class Verifier {
      * @param null $params
      * @throws \PHPUnit_Framework_ExpectationFailedException
      */
-    public function verifyNeverInvoked($name, $params = null)
-    {
-        $calls = $this->getCallsForMethod($name);
-        $separator = $this->callSyntax($name);
-
-         if (is_array($params)) {
-             if (empty($calls)) return;
-             $params = ArgumentsFormatter::toString($params);
-             foreach ($calls as $args) {
-                 if ($this->onlyExpectedArguments($params, $args) == $params) throw new fail(sprintf($this->neverInvoked, $this->className));
-             }
-             return;
-         }
-         if (count($calls)) throw new fail(sprintf($this->neverInvoked, $this->className.$separator.$name));        
-    }
+    public function verifyNeverInvoked($name, $params = null);
 
 }

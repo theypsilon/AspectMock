@@ -86,7 +86,7 @@ class testDoubleTest extends \Codeception\TestCase\Test
             $any->callMeMaybe();
             $any->name = 'hello world';
             $this->assertInstanceOf('AspectMock\Proxy\Anything', $any->name);
-            verify($any->class->className)->equals('AspectMock\Proxy\Anything');
+            verify($any->class->getClassName())->equals('AspectMock\Proxy\Anything');
         });
     }
 
