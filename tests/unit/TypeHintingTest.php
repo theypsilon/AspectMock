@@ -4,44 +4,27 @@ use AspectMock\Test as test;
 
 class StubTest extends \PHPUnit_Framework_TestCase
 {
-    public function testTypeHinting_objectInstanceOfClass_ok()
+    /**
+     * @dataProvider dataProvider_typeHinting_instanceOf
+     */
+    public function testTypeHinting_objectInstanceOf_matches($object, $type)
     {
-        $sut = new demo\UserModel;
-
-        $actual = $sut instanceof demo\UserModel;
-
-        verify($actual)->true();
+        $this->assertInstanceOf($type, $object);
     }
 
-    public function testTypeHinting_mockInstanceOfClass_ok()
+    public function dataProvider_typeHinting_instanceOf()
     {
-        $mock = test::double(new demo\UserModel);
-
-        $actual = $mock instanceof demo\UserModel;
-
-        verify($actual)->true();
-    }
-
-    public function testTypeHinting_mockInstanceOfProxy_ok()
-    {
-        $mock = test::double(new demo\UserModel);
-
-        $actual = $mock instanceof AspectMock\Proxy\Verifier;
-
-        verify($actual)->true();
-    }
-
-    public function testTypeHinting_objectInstanceOfProxy_wrong()
-    {
-        $sut = new demo\UserModel;
-
-        $actual = $sut instanceof AspectMock\Proxy\Verifier;
-
-        verify($actual)->false();
+        return [
+            // type checked instance         , expected valid instanceof
+            [new demo\UserModel              ,             'demo\UserModel'],
+            [test::double(new demo\UserModel),             'demo\UserModel'],
+            [test::double('demo\UserModel')  ,             'demo\UserModel'],
+            [test::double(new demo\UserModel),  'AspectMock\Proxy\Verifier'],
+        ];
     }
 
     /**
-     * @dataProvider dataProvider_typeHintingCall
+     * @dataProvider dataProvider_typeHinting_methodCall
      */
     public function testTypeHinting_callMethod_throwsExceptionWhenAppropriate($user, $expected)
     {
@@ -57,19 +40,19 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->equals($expected);
     }
 
-    public function dataProvider_typeHintingCall()
+    public function dataProvider_typeHinting_methodCall()
     {
         return [
             // type checked instance           , exception is expected
             [new demo\UserModel                ,                false],
             [test::double(new demo\UserModel)  ,                false],
             [test::double('demo\UserModel')    ,                false],
-            [test::double('demo\UserModel', []),                false],
-            [new stdClass                      ,                 true],
+            [test::double(new demo\UserModel)  ,                false],
+            [test::double('demo\UserModel')    ,                false],
 
+            [new stdClass                      ,                 true],
             [test::double(new stdClass)        ,                 true],
             [test::double('stdClass')          ,                 true],
-            [test::double('stdClass', [])      ,                 true],
         ];
     }
 }
