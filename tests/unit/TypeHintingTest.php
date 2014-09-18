@@ -4,7 +4,7 @@ use AspectMock\Test as test;
 
 class StubTest extends \PHPUnit_Framework_TestCase
 {
-    public function testStandardInstantiation_InstanceOf_Ok()
+    public function testStandardInstantiation_InstanceOfSUT_Ok()
     {
         $sut = new demo\UserModel;
 
@@ -13,13 +13,31 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->true();
     }
 
-    public function testMockTestDouble_InstanceOf_Ok()
+    public function testMockTestDouble_InstanceOfSUT_Ok()
     {
         $mock = test::double(new demo\UserModel);
 
         $actual = $mock instanceof demo\UserModel;
 
         verify($actual)->true();
+    }
+
+    public function testMockTestDouble_InstanceOfProxy_Ok()
+    {
+        $mock = test::double(new demo\UserModel);
+
+        $actual = $mock instanceof AspectMock\Proxy\Verifier;
+
+        verify($actual)->true();
+    }
+
+    public function testMockTestDouble_InstanceOfProxy_Wrong()
+    {
+        $sut = new demo\UserModel;
+
+        $actual = $sut instanceof AspectMock\Proxy\Verifier;
+
+        verify($actual)->false();
     }
 
     /**
