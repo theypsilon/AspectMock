@@ -4,7 +4,7 @@ use AspectMock\Test as test;
 
 class StubTest extends \PHPUnit_Framework_TestCase
 {
-    public function testStandardInstantiation_InstanceOfSUT_Ok()
+    public function testTypeHinting_objectInstanceOfClass_ok()
     {
         $sut = new demo\UserModel;
 
@@ -13,7 +13,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->true();
     }
 
-    public function testMockTestDouble_InstanceOfSUT_Ok()
+    public function testTypeHinting_mockInstanceOfClass_ok()
     {
         $mock = test::double(new demo\UserModel);
 
@@ -22,7 +22,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->true();
     }
 
-    public function testMockTestDouble_InstanceOfProxy_Ok()
+    public function testTypeHinting_mockInstanceOfProxy_ok()
     {
         $mock = test::double(new demo\UserModel);
 
@@ -31,7 +31,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->true();
     }
 
-    public function testMockTestDouble_InstanceOfProxy_Wrong()
+    public function testTypeHinting_objectInstanceOfProxy_wrong()
     {
         $sut = new demo\UserModel;
 
@@ -43,7 +43,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataProvider_typeHintingCall
      */
-    public function testStandardInstantiation_TypeHintingCall_throwsExceptionWhenAppropriate($user, $expected)
+    public function testTypeHinting_callMethod_throwsExceptionWhenAppropriate($user, $expected)
     {
         $service = new demo\UserService;
         $actual  = false;
