@@ -22,61 +22,36 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->true();
     }
 
-    public function testStandardInstantiation_TypeHintingCall_Ok()
+    /**
+     * @dataProvider dataProvider_typeHintingCall
+     */
+    public function testStandardInstantiation_TypeHintingCall_throwsExceptionWhenAppropriate($user, $expected)
     {
-        $sut      = new demo\UserService;
-        $user     = new demo\UserModel;
-        $actual   = null;
+        $service = new demo\UserService;
+        $actual  = false;
 
         try {
-            $sut->getName($user);
+            $service->getName($user);
         } Catch(Exception $e) {
-            $actual = $e;
+            $actual = true;
         }
 
-        verify($actual)->null();
+        verify($actual)->equals($expected);
     }
 
-    public function testStandardInstantiation_TypeHintingCall_Wrong()
+    public function dataProvider_typeHintingCall()
     {
-        $sut      = new demo\UserService;
-        $actual   = null;
+        return [
+            // type checked instance           , exception is expected
+            [new demo\UserModel                ,                false],
+            [test::double(new demo\UserModel)  ,                false],
+            [test::double('demo\UserModel')    ,                false],
+            [test::double('demo\UserModel', []),                false],
+            [new stdClass                      ,                 true],
 
-        try {
-            $sut->getName(new stdClass);
-        } Catch(Exception $e) {
-            $actual = $e;
-        }
-
-        verify($actual)->notNull();
-    }
-
-    public function testMockTestDouble_TypeHintingCall_Ok()
-    {
-        $mock     = test::double(new demo\UserService);
-        $user     = new demo\UserModel;
-        $actual   = null;
-
-        try {
-            $mock->getName($user);
-        } Catch(Exception $e) {
-            $actual = $e;
-        }
-
-        verify($actual)->null();
-    }
-
-    public function testMockTestDouble_TypeHintingCall_Wrong()
-    {
-        $mock     = test::double(new demo\UserService);
-        $actual   = null;
-
-        try {
-            $mock->getName(new stdClass);
-        } Catch(Exception $e) {
-            $actual = $e;
-        }
-
-        verify($actual)->notNull();
+            [test::double(new stdClass)        ,                 true],
+            [test::double('stdClass')          ,                 true],
+            [test::double('stdClass', [])      ,                 true],
+        ];
     }
 }
