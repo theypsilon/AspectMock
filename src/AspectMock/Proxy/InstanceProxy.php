@@ -55,7 +55,7 @@ use AspectMock\Test;
  *
  */
 
-class InstanceProxy implements Verifier {
+class InstanceProxy implements Verifier, ClassHandler {
 
     use VerifierTrait;
 

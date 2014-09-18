@@ -42,7 +42,7 @@ use PHPUnit_Framework_Assert as a;
  * ?>
  * ```
  */
-class ClassProxy implements Verifier  {
+class ClassProxy implements Verifier, ClassHandler  {
 
     use VerifierTrait;
 

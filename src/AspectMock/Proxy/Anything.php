@@ -8,7 +8,7 @@ use AspectMock\Util\Undefined;
  * Originally written from Codeception.
  *
  */
-class Anything implements Undefined, \ArrayAccess, \Iterator
+class Anything implements Undefined, \ArrayAccess, \Iterator, ClassHandler
 {
     use ClassHandlerTrait;
 
