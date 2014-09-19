@@ -5,6 +5,10 @@
         {
             "name": "Michael Bodnarchuk",
             "email": "davert.php@mailican.com"
+        },
+        {
+            "name": "José Manuel Barroso Galindo",
+            "email": "jose.galindo@lazada.com"
         }
     ],
     "autoload": {
