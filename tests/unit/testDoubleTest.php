@@ -29,7 +29,7 @@ class testDoubleTest extends \Codeception\TestCase\Test
     public function testDoubleObject()
     {
         $user = new demo\UserModel();
-        $user = test::double($user, ['save' => null]);
+        $user = test::doubleProxy($user, ['save' => null]);
         $user->save();
         $user->verifyInvoked('save');
 
@@ -82,7 +82,7 @@ class testDoubleTest extends \Codeception\TestCase\Test
         });
 
         $this->specify('proxifies magic method calls', function() {
-            $any = test::double($this->any);
+            $any = test::doubleProxy($this->any);
             $any->callMeMaybe();
             $any->name = 'hello world';
             $this->assertInstanceOf('AspectMock\Proxy\Anything', $any->name);
@@ -103,8 +103,8 @@ class testDoubleTest extends \Codeception\TestCase\Test
     public function testCleanupSpecificObj()
     {
         $model = test::double('demo\UserModel');
-        $user1 = test::double($model->make(), ['getName' => 'bad boy']);
-        $user2 = test::double($model->make(), ['getName' => 'good boy']);
+        $user1 = test::doubleProxy($model->make(), ['getName' => 'bad boy']);
+        $user2 = test::doubleProxy($model->make(), ['getName' => 'good boy']);
         verify($user1->getName())->equals('bad boy');
         verify($user2->getName())->equals('good boy');
         test::clean($user1);

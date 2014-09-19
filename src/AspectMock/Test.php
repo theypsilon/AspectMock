@@ -87,7 +87,7 @@ class Test {
      * @param $classOrObject
      * @param array $params
      * @throws \Exception
-     * @return Verifier
+     * @return Proxy\ClassProxy|null
      */
     public static function double($classOrObject, $params = array())
     {
@@ -101,10 +101,22 @@ class Test {
             Core\Registry::registerClass($classOrObject, $params);
             return new Proxy\ClassProxy($classOrObject);
         }
-        if (is_object($classOrObject)) {
-            Core\Registry::registerObject($classOrObject, $params);
-            return new Proxy\InstanceProxy($classOrObject);
+    }
+
+    /**
+     * @param $object
+     * @param array $params
+     * @return InstanceProxy|null
+     */
+    public static function doubleProxy($object, $params = array())
+    {
+        $object = Registry::getRealClassOrObject($object);
+        $proxy  = null;
+        if (is_object($object)) {
+            Core\Registry::registerObject($object, $params);
+            $proxy = new Proxy\InstanceProxy($object);
         }
+        return $proxy;
     }
 
     /**
@@ -155,15 +167,27 @@ class Test {
      * @api
      * @param $classOrObject
      * @param array $params
-     * @return Verifier
+     * @return Proxy\ClassProxy
      *
      */
     public static function spec($classOrObject, $params = array())
     {
-        if (is_object($classOrObject)) return self::double($classOrObject, $params);
         if (class_exists($classOrObject)) return self::double($classOrObject, $params);
         
         return new AnythingClassProxy($classOrObject);
+    }
+
+    /**
+     * @param $object
+     * @param array $params
+     * @return ClassProxy|null
+     * @throws \Exception
+     */
+    public static function specProxy($object, $params = array())
+    {
+        if (is_object($object)) return self::double($object, $params);
+
+        return new AnythingClassProxy($object);
     }
 
     /**
@@ -196,7 +220,8 @@ class Test {
     public static function methods($classOrObject, array $only = array())
     {
         $classOrObject = Registry::getRealClassOrObject($classOrObject);
-        if (is_object($classOrObject)) {
+        $isObject = is_object($classOrObject);
+        if ($isObject) {
             $reflected = new \ReflectionClass(get_class($classOrObject));
         } else {
             if (!class_exists($classOrObject)) throw new \Exception("Class $classOrObject not defined.");
@@ -210,7 +235,7 @@ class Test {
             if (in_array($m->name, $only)) continue;
             $params[$m->name] = null;
         }
-        return self::double($classOrObject, $params);
+        return $isObject ? self::doubleProxy($classOrObject, $params) : self::double($classOrObject, $params);
     }
 
     /**
