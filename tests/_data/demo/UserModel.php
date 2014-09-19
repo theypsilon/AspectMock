@@ -61,11 +61,13 @@ class UserModel {
     public function __call($name, $args = array())
     {
         if ($name == 'renameUser') return 'David Blane';
+        else throw new \Exception("Method '$name' does not exist.");
     }
 
     public static function __callStatic($name, $args)
     {
         if ($name == 'defaultRole') return "member";
+        else throw new \Exception("Method '$name' does not exist.");
     }
 
     public function dump()

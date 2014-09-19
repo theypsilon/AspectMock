@@ -15,12 +15,12 @@ class TypeCheckTest extends \PHPUnit_Framework_TestCase
     public function dataProvider_instanceOf()
     {
         return [
-            // type checked instance         , expected valid instanceof
-            [new demo\UserModel              ,             'demo\UserModel'],
-            [test::doubleProxy(new demo\UserModel),  'AspectMock\Proxy\Verifier'],
-            [test::double('demo\UserModel')  ,  'AspectMock\Proxy\Verifier'],
-            [test::double('demo\UserModel')->construct(),  'demo\UserModel'],
-            [test::double('demo\UserModel')->make()     ,  'demo\UserModel'],
+            // type checked instance                    ,     expected valid instanceof
+            [new demo\UserModel                         ,             'demo\UserModel'],
+            [test::doubleProxy(new demo\UserModel)      ,  'AspectMock\Proxy\Verifier'],
+            [test::double('demo\UserModel')             ,  'AspectMock\Proxy\Verifier'],
+            [test::double('demo\UserModel')->construct(),             'demo\UserModel'],
+            [test::double('demo\UserModel')->make()     ,             'demo\UserModel'],
         ];
     }
 
@@ -44,12 +44,12 @@ class TypeCheckTest extends \PHPUnit_Framework_TestCase
     public function dataProvider_callTypeHintedMethod()
     {
         return [
-            // type checked instance           , exception is expected
-            [new demo\UserModel                ,                false],
-            [test::doubleProxy(new demo\UserModel)  ,                 true],
-            [test::double('demo\UserModel')    ,                 true],
-            [test::double('demo\UserModel')->construct(),       false],
-            [test::double('demo\UserModel')->make(),            false],
+            // type checked instance                    , exception is expected
+            [new demo\UserModel                         ,                false],
+            [test::doubleProxy(new demo\UserModel)      ,                 true],
+            [test::double('demo\UserModel')             ,                 true],
+            [test::double('demo\UserModel')->construct(),                false],
+            [test::double('demo\UserModel')->make()     ,                false],
 
         ];
     }

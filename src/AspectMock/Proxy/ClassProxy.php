@@ -150,7 +150,11 @@ class ClassProxy implements Verifier, ClassHandler  {
      */
     public function construct()
     {
-        return $this->reflected->newInstanceArgs(func_get_args());
+        $instance = $this->reflected->newInstanceArgs(func_get_args());
+        $instance->verifyNeverInvoked = function() {
+            throw new Exception("patata");
+        };
+        return $instance;
     }
 
     /**
