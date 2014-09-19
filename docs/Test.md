@@ -28,14 +28,16 @@ Example:
 <?php
 
 # simple
-$user = test::double(new User, ['getName' => 'davert']);
+$classMock = test::double('User', ['getName' => 'davert']);
+$user = $classMock->construct();
 $user->getName() // => davert
-$user->verifyInvoked('getName'); // => success
+$classMock->verifyInvoked('getName'); // => success
 
 # with closure
-$user = test::double(new User, ['getName' => function() { return $this->login; }]);
+$classMock = test::double(new User, ['getName' => function() { return $this->login; }]);
+$user = $classMock->construct();
 $user->login = 'davert';
-$user->getName(); // => davert
+$classMock->getName(); // => davert
 
 # on a class
 $ar = test::double('ActiveRecord', ['save' => null]);
