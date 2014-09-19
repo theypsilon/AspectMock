@@ -36,22 +36,7 @@ trait VerifierTrait {
     }
 
     /**
-     * Verifies a method was invoked at least once.
-     * In second argument you can specify with which params method expected to be invoked;
-     *
-     * ``` php
-     * <?php
-     * $user->verifyInvoked('save');
-     * $user->verifyInvoked('setName',['davert']);
-     *
-     * ?>
-     * ```
-     *
-     * @param $name
-     * @param null $params
-     * @throws \PHPUnit_Framework_ExpectationFailedException
-     * @param array $params
-     * @throws fail
+     * @see Verifier::verifyInvoked
      */
     public function verifyInvoked($name, $params = null)
     {
@@ -72,10 +57,7 @@ trait VerifierTrait {
     }
 
     /**
-     * Verifies that method was invoked only once.
-     *
-     * @param $name
-     * @param array $params
+     * @see Verifier::verifyInvokedOnce
      */
     public function verifyInvokedOnce($name, $params = null)
     {
@@ -83,20 +65,7 @@ trait VerifierTrait {
     }
 
     /**
-     * Verifies that method was called exactly $times times.
-     *
-     * ``` php
-     * <?php
-     * $user->verifyInvokedMultipleTimes('save',2);
-     * $user->verifyInvokedMultipleTimes('dispatchEvent',3,['before_validate']);
-     * $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
-     * ?>
-     * ```
-     *
-     * @param $name
-     * @param $times
-     * @param array $params
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @see Verifier::verifyInvokedMultipleTimes
      */
     public function verifyInvokedMultipleTimes($name, $times, $params = null)
     {
@@ -122,22 +91,7 @@ trait VerifierTrait {
     }
 
     /**
-     * Verifies that method was not called.
-     * In second argument with which arguments is not expected to be called.
-     *
-     * ``` php
-     * <?php
-     * $user->setName('davert');
-     * $user->verifyNeverInvoked('setName'); // fail
-     * $user->verifyNeverInvoked('setName',['davert']); // fail
-     * $user->verifyNeverInvoked('setName',['bob']); // success
-     * $user->verifyNeverInvoked('setName',[]); // success
-     * ?>
-     * ```
-     *
-     * @param $name
-     * @param null $params
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @see Verifier::verifyNeverInvoked
      */
     public function verifyNeverInvoked($name, $params = null)
     {

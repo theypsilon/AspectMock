@@ -17,9 +17,10 @@ class StubTest extends \PHPUnit_Framework_TestCase
         return [
             // type checked instance         , expected valid instanceof
             [new demo\UserModel              ,             'demo\UserModel'],
-            [test::double(new demo\UserModel),             'demo\UserModel'],
-            [test::double('demo\UserModel')  ,             'demo\UserModel'],
             [test::double(new demo\UserModel),  'AspectMock\Proxy\Verifier'],
+            [test::double('demo\UserModel')  ,  'AspectMock\Proxy\Verifier'],
+            [test::double('demo\UserModel')->construct(),  'demo\UserModel'],
+            [test::double('demo\UserModel')->make()     ,  'demo\UserModel'],
         ];
     }
 
@@ -45,14 +46,35 @@ class StubTest extends \PHPUnit_Framework_TestCase
         return [
             // type checked instance           , exception is expected
             [new demo\UserModel                ,                false],
-            [test::double(new demo\UserModel)  ,                false],
-            [test::double('demo\UserModel')    ,                false],
-            [test::double(new demo\UserModel)  ,                false],
-            [test::double('demo\UserModel')    ,                false],
+            [test::double(new demo\UserModel)  ,                 true],
+            [test::double('demo\UserModel')    ,                 true],
+            [test::double('demo\UserModel')->construct(),       false],
+            [test::double('demo\UserModel')->make(),            false],
 
             [new stdClass                      ,                 true],
             [test::double(new stdClass)        ,                 true],
             [test::double('stdClass')          ,                 true],
+            [test::double('stdClass')->construct(),              true],
+            [test::double('stdClass')->make()  ,                 true],
         ];
+    }
+
+    public function testTypeHinting_callMethodAfterMockingClass_ok()
+    {
+
+
+        $user = test::double('demo\UserModel', ['getName' => 'rabbit'])->construct();
+        $user->setName('dog');
+        $service    = new demo\UserService;
+        $exception  = false;
+
+        try {
+            $name = $service->getName($user);
+        } Catch(Exception $e) {
+            $exception = true;
+        }
+
+        verify($exception)->equals(false);
+        verify($name)->equals('rabbit');
     }
 }
