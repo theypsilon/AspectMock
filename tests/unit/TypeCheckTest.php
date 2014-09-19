@@ -2,17 +2,17 @@
 
 use AspectMock\Test as test;
 
-class StubTest extends \PHPUnit_Framework_TestCase
+class TypeCheckTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider dataProvider_typeHinting_instanceOf
+     * @dataProvider dataProvider_instanceOf
      */
-    public function testTypeHinting_objectInstanceOf_matches($object, $type)
+    public function testObjectInstanceOf_matches($object, $type)
     {
         $this->assertInstanceOf($type, $object);
     }
 
-    public function dataProvider_typeHinting_instanceOf()
+    public function dataProvider_instanceOf()
     {
         return [
             // type checked instance         , expected valid instanceof
@@ -25,9 +25,9 @@ class StubTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider dataProvider_typeHinting_methodCall
+     * @dataProvider dataProvider_callTypeHintedMethod
      */
-    public function testTypeHinting_callMethod_throwsExceptionWhenAppropriate($user, $expected)
+    public function testCallTypeHintedMethod_throwsExceptionWhenAppropriate($user, $expected)
     {
         $service = new demo\UserService;
         $actual  = false;
@@ -41,7 +41,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
         verify($actual)->equals($expected);
     }
 
-    public function dataProvider_typeHinting_methodCall()
+    public function dataProvider_callTypeHintedMethod()
     {
         return [
             // type checked instance           , exception is expected
@@ -61,8 +61,6 @@ class StubTest extends \PHPUnit_Framework_TestCase
 
     public function testTypeHinting_callMethodAfterMockingClass_ok()
     {
-
-
         $user = test::double('demo\UserModel', ['getName' => 'rabbit'])->construct();
         $user->setName('dog');
         $service    = new demo\UserService;
