@@ -6,10 +6,13 @@
 InstanceProxy is a proxy for underlying object, mocked with test::double.
 A real object can be returned with `getObject` methods.
 
+InstanceProxy use is discouraged in order to avoid problems with type checks.
+In most of cases, you could prefer to double a class, and then make a new instance of it.
+
 ``` php
 <?php
 $user1 = new User;
-$user2 = test::double($user1);
+$user2 = test::doubleProxy($user1);
 $user1 instanceof User; // true
 $user2 instanceof AspectMock\Proxy\InstanceProxy; // true
 
@@ -23,7 +26,7 @@ Contains verification methods and `class` property that points to `ClassProxy`.
 ``` php
 <?php
 $user = new User(['name' => 'davert']);
-$user = test::double(new User);
+$user = test::doubleProxy(new User);
 // now $user is a proxy class of user
 $this->assertEquals('davert', $user->getName()); // success
 $user->verifyInvoked('getName'); // success
@@ -36,7 +39,7 @@ Constains a **ClassVerifier** object.
 
 ``` php
 <?php
-$user = test::double(new User);
+$user = test::doubleProxy(new User);
 $user->class->hasMethod('save');
 $user->setName('davert');
 $user->class->verifyInvoked('setName');
@@ -46,7 +49,7 @@ Also, you can get the list of calls for a specific method.
 
 ```php
 <?php
-$user = test::double(new UserModel);
+$user = test::doubleProxy(new UserModel);
 $user->someMethod('arg1', 'arg2');
 $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 ?>

@@ -115,12 +115,13 @@ Only 4 methods are necessary for method call verification and one method to defi
 <?php
 function testSimpleStubAndMock()
 {	
-	$user = test::double(new User, ['getName' => 'davert']);
+	$classMock = test::double('User', ['getName' => 'davert']);
+	$user = new User;
 	$this->assertEquals('davert', $user->getName());
-	$user->verifyMethodInvoked('getName');
-	$user->verifyMethodInvokedOnce('getName');
-	$user->verifyMethodNeverInvoked('setName');
-	$user->verifyMethodInvokedMultipleTimes('setName',1);
+	$classMock->verifyMethodInvoked('getName');
+	$classMock->verifyMethodInvokedOnce('getName');
+	$classMock->verifyMethodNeverInvoked('setName');
+	$classMock->verifyMethodInvokedMultipleTimes('setName',1);
 }
 ?>
 ```

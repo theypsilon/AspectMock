@@ -29,13 +29,13 @@ Example:
 
 # simple
 $classMock = test::double('User', ['getName' => 'davert']);
-$user = $classMock->construct();
+$user = new User;
 $user->getName() // => davert
 $classMock->verifyInvoked('getName'); // => success
 
 # with closure
-$classMock = test::double(new User, ['getName' => function() { return $this->login; }]);
-$user = $classMock->construct();
+$classMock = test::double('User', ['getName' => function() { return $this->login; }]);
+$user = new User;
 $user->login = 'davert';
 $classMock->getName(); // => davert
 
